@@ -39,14 +39,16 @@ def print_rule_list(required, permitted, forbidden):
 
 
 @click.group(context_settings={'help_option_names': ('-h', '--help')})
-@click.version_option(__version__, '-v', '--version')
+@click.version_option(__version__, '-v', '--version', message='%(version)s')
 def cli():
+    """ChooseALicense in your terminal."""
     pass
 
 
 @cli.command()
 @click.argument('license')
 def info(license):
+    """Show the info of the specified license."""
     response = requests.get(
         'https://api.github.com/licenses/{0}'.format(license),
         headers={'accept': 'application/vnd.github.drax-preview+json'})
@@ -59,9 +61,11 @@ def info(license):
 
 @cli.command()
 def generate():
+    """Generate the specified license."""
     pass
 
 
 @cli.command()
-def content():
+def context():
+    """Show the default context."""
     pass
