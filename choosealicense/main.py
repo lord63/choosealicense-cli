@@ -46,6 +46,16 @@ def cli():
 
 
 @cli.command()
+def show():
+    """List all the license."""
+    response = requests.get(
+               'https://api.github.com/licenses',
+               headers={'accept': 'application/vnd.github.drax-preview+json'})
+    keys = [item['key'] for item in response.json()]
+    click.echo(', '.join(keys))
+
+
+@cli.command()
 @click.argument('license')
 def info(license):
     """Show the info of the specified license."""
