@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import textwrap
+import re
+from datetime import date
+import subprocess
 
 import requests
 import click
@@ -9,6 +12,10 @@ from click import echo, secho
 from click.termui import get_terminal_size
 
 from choosealicense import __version__
+
+
+LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause', 'bsd-3-clause',
+                       'isc', 'unlicense']
 
 
 def print_description(text):
@@ -37,6 +44,26 @@ def print_rule_list(required, permitted, forbidden):
         secho('{:<25}'.format(i), nl=False)
         secho('{:<25}'.format(j), nl=False)
         secho(k)
+
+
+def get_default_context():
+    year = date.today().year
+    try:
+        fullname = subprocess.check_output(
+            'git config --get user.name'.split()
+        ).strip().decode('utf-8')
+    except Exception:
+        print("WARNING: Please configure your git. I need your user name.\n")
+        raise
+    try:
+        email = subprocess.check_output(
+            'git config --get user.email'.split()
+        ).strip().decode('utf-8')
+    except Exception:
+        print("WARNING: Please configure your git. I need your email.\n")
+        raise
+    return {'year': year, 'fullname': fullname, 'email': email,
+            'project': 'the copyright holder'}
 
 
 @click.group(context_settings={'help_option_names': ('-h', '--help')})
@@ -77,6 +104,16 @@ def generate():
 
 
 @cli.command()
-def context():
-    """Show the default context."""
-    pass
+@click.argument('license')
+def context(license):
+    """Show the default context for the license."""
+    if license not in LICENSE_WITH_CONTEXT:
+        print "Just use it, there's no context for the license."
+    else:
+        response = requests.get(
+            'https://api.github.com/licenses/{0}'.format(license),
+            headers={'accept': 'application/vnd.github.drax-preview+json'})
+        context = re.findall(r'\[(\w+)\]', response.json()['body'])
+        default_context = get_default_context()
+        for item in context:
+            echo('{0}: {1}'.format(item, default_context[item]))
