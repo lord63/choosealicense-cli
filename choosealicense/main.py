@@ -14,8 +14,8 @@ from click.termui import get_terminal_size
 from choosealicense import __version__
 
 
-LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause', 'bsd-3-clause',
-                        'isc', 'unlicense']
+LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
+                        'bsd-3-clause', 'isc']
 
 
 def print_description(text):
