@@ -138,5 +138,7 @@ def context(license):
             headers={'accept': 'application/vnd.github.drax-preview+json'})
         context = re.findall(r'\[(\w+)\]', response.json()['body'])
         default_context = get_default_context()
+        echo('The template has following defaults:')
         for item in context:
-            echo('{0}: {1}'.format(item, default_context[item]))
+            echo('\t{0}: {1}'.format(item, default_context[item]))
+        echo('You can overwrite them at your ease.')
