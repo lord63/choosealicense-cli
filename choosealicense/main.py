@@ -98,8 +98,12 @@ def info(license):
 
 
 @cli.command()
+@click.option('--fullname', '-f', help="Copyright holder's name")
+@click.option('--year', '-y', help="Copyright year")
+@click.option('--email', '-e', help="Copyright holder's email")
+@click.option('--project', '-p', help="The project organization")
 @click.argument('license')
-def generate(license):
+def generate(license, fullname, year, email, project):
     """Generate the specified license."""
     response = requests.get(
         'https://api.github.com/licenses/{0}'.format(license),
@@ -109,7 +113,13 @@ def generate(license):
         echo(license_template, nl=False)
     else:
         context = re.findall(r'\[(\w+)\]', response.json()['body'])
+        raw_context = {'fullname': fullname, 'year':year, 'email': email,
+                        'project': project}
+        user_context = {key: value for (key, value) in raw_context.items()
+                       if value is not None}
         default_context = get_default_context()
+        for (key, value) in user_context.items():
+            default_context[key] = value
         for item in context:
             license_template = license_template.replace('[{0}]'.format(item),
                                                 default_context[item])
