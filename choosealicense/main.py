@@ -15,7 +15,7 @@ from choosealicense import __version__
 
 
 LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause', 'bsd-3-clause',
-                       'isc', 'unlicense']
+                        'isc', 'unlicense']
 
 
 def print_description(text):
@@ -47,7 +47,7 @@ def print_rule_list(required, permitted, forbidden):
 
 
 def get_default_context():
-    year = date.today().year
+    year = str(date.today().year)
     try:
         fullname = subprocess.check_output(
             'git config --get user.name'.split()
@@ -77,8 +77,8 @@ def cli():
 def show():
     """List all the license."""
     response = requests.get(
-               'https://api.github.com/licenses',
-               headers={'accept': 'application/vnd.github.drax-preview+json'})
+        'https://api.github.com/licenses',
+        headers={'accept': 'application/vnd.github.drax-preview+json'})
     keys = [item['key'] for item in response.json()]
     echo(', '.join(keys))
 
@@ -98,9 +98,22 @@ def info(license):
 
 
 @cli.command()
-def generate():
+@click.argument('license')
+def generate(license):
     """Generate the specified license."""
-    pass
+    response = requests.get(
+        'https://api.github.com/licenses/{0}'.format(license),
+        headers={'accept': 'application/vnd.github.drax-preview+json'})
+    license_template = response.json()['body']
+    if license not in LICENSE_WITH_CONTEXT:
+        echo(license_template, nl=False)
+    else:
+        context = re.findall(r'\[(\w+)\]', response.json()['body'])
+        default_context = get_default_context()
+        for item in context:
+            license_template = license_template.replace('[{0}]'.format(item),
+                                                default_context[item])
+        echo(license_template, nl=False)
 
 
 @cli.command()
