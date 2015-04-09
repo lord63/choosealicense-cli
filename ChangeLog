@@ -1,0 +1,7 @@
+2015.04.09
+- release v0.1.0
+- feature supported:
+    - can list all the license
+    - can show the info of the license
+    - show the context for the license template
+    - generate a license
