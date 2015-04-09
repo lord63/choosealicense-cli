@@ -18,7 +18,15 @@ LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
                         'bsd-3-clause', 'isc']
 
 
+def print_name(name):
+    """Print the license name in a nice way."""
+    secho(name, bold=True)
+    secho('='*len(name), bold=True)
+    echo()
+
+
 def print_description(text):
+    """Print the short description for the license."""
     width, _ = get_terminal_size()
     width = width if width < 78 else 78
     for line in textwrap.wrap(text, width):
@@ -26,13 +34,8 @@ def print_description(text):
     echo()
 
 
-def print_name(name):
-    secho(name, bold=True)
-    secho('='*len(name), bold=True)
-    echo()
-
-
 def print_rule_list(required, permitted, forbidden):
+    """Print the rule list like the way on the web."""
     max_rule_num = max(list(map(len, [required, permitted, forbidden])))
     for item in [required, permitted, forbidden]:
         if len(item) < max_rule_num:
@@ -40,27 +43,28 @@ def print_rule_list(required, permitted, forbidden):
     secho('{:<25}'.format('Required'), nl=False, bold=True, fg='blue')
     secho('{:<25}'.format('Permitted'), nl=False, bold=True, fg='green')
     secho('Forbidden', bold=True, fg='red')
-    for i, j, k in zip(required, permitted, forbidden):
-        secho('{:<25}'.format(i), nl=False)
-        secho('{:<25}'.format(j), nl=False)
-        secho(k)
+    for require, permit, forbid in zip(required, permitted, forbidden):
+        secho('{:<25}'.format(require), nl=False)
+        secho('{:<25}'.format(permit), nl=False)
+        secho(forbid)
 
 
 def get_default_context():
+    """Get the default context for the license template."""
     year = str(date.today().year)
     try:
         fullname = subprocess.check_output(
             'git config --get user.name'.split()
         ).strip().decode('utf-8')
     except Exception:
-        print("WARNING: Please configure your git. I need your user name.\n")
+        print("WARNING: Please configure your git(user.name).\n")
         raise
     try:
         email = subprocess.check_output(
             'git config --get user.email'.split()
         ).strip().decode('utf-8')
     except Exception:
-        print("WARNING: Please configure your git. I need your email.\n")
+        print("WARNING: Please configure your git(user.email).\n")
         raise
     return {'year': year, 'fullname': fullname, 'email': email,
             'project': 'the copyright holder'}
@@ -113,16 +117,16 @@ def generate(license, fullname, year, email, project):
         echo(license_template, nl=False)
     else:
         context = re.findall(r'\[(\w+)\]', response.json()['body'])
-        raw_context = {'fullname': fullname, 'year':year, 'email': email,
-                        'project': project}
+        raw_context = {'fullname': fullname, 'year': year, 'email': email,
+                       'project': project}
         user_context = {key: value for (key, value) in raw_context.items()
-                       if value is not None}
+                        if value is not None}
         default_context = get_default_context()
         for (key, value) in user_context.items():
             default_context[key] = value
         for item in context:
             license_template = license_template.replace('[{0}]'.format(item),
-                                                default_context[item])
+                                                        default_context[item])
         echo(license_template, nl=False)
 
 
