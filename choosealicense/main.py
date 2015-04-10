@@ -57,14 +57,14 @@ def get_default_context():
             'git config --get user.name'.split()
         ).strip().decode('utf-8')
     except Exception:
-        print("WARNING: Please configure your git(user.name).\n")
+        echo("WARNING: Please configure your git(user.name).\n")
         raise
     try:
         email = subprocess.check_output(
             'git config --get user.email'.split()
         ).strip().decode('utf-8')
     except Exception:
-        print("WARNING: Please configure your git(user.email).\n")
+        echo("WARNING: Please configure your git(user.email).\n")
         raise
     return {'year': year, 'fullname': fullname, 'email': email,
             'project': 'the copyright holder'}
@@ -135,7 +135,7 @@ def generate(license, fullname, year, email, project):
 def context(license):
     """Show the default context for the license."""
     if license not in LICENSE_WITH_CONTEXT:
-        print "Just use it, there's no context for the license."
+        echo("Just use it, there's no context for the license.")
     else:
         response = requests.get(
             'https://api.github.com/licenses/{0}'.format(license),
