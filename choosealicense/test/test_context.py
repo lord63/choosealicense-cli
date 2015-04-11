@@ -16,8 +16,8 @@ def test_show_license_context():
                         'bsd-3-clause, cc0-1.0, epl-1.0, gpl-2.0, gpl-3.0, '
                         'isc, lgpl-2.1, lgpl-3.0, mit, mpl-2.0, unlicense')
     runner = CliRunner()
-    for license in all_the_licenses:
-        result = runner.invoke(context, license)
+    for license in all_the_licenses.split(', '):
+        result = runner.invoke(context, [license])
         output, exit_code = result.output, result.exit_code
         assert exit_code == 0
         if license not in LICENSE_WITH_CONTEXT:
