@@ -5,15 +5,14 @@
     Tests for the `license info` function
 """
 
-import unittest
-
-from click.testing import CliRunner
+import pytest
 
 from choosealicense.main import info
 
 
-class TestInfo(unittest.TestCase):
-    def test_show_license_info(self):
+@pytest.mark.usefixtures('mock_api')
+class TestInfo():
+    def test_show_license_info(self, runner):
         all_the_licenses = {
             'agpl-3.0': ('GNU Affero General Public License v3.0', 11),
             'apache-2.0': ('Apache License 2.0', 10),
@@ -31,17 +30,16 @@ class TestInfo(unittest.TestCase):
             'mpl-2.0': ('Mozilla Public License 2.0', 10),
             'unlicense': ('The Unlicense', 6)
         }
-        runner = CliRunner()
+
         for short_name, fullname_and_rules_number in all_the_licenses.items():
             result = runner.invoke(info, [short_name])
             output, exit_code = result.output, result.exit_code
             rules = output.split('Forbidden\n')[1].split('\n')
             flat_rules = sum([item.split() for item in rules], [])
             fullname, rules_number = fullname_and_rules_number
-            self.assertEqual(exit_code, 0)
-            self.assertIn(fullname, output)
-            self.assertIn(
-                '{0:<25}{1:<25}{2}'.format(
-                    'Required', 'Permitted', 'Forbidden'),
-                output)
-            self.assertEqual(len(flat_rules), rules_number)
+
+            assert exit_code == 0
+            assert fullname in output
+            assert '{0:<25}{1:<25}{2}'.format(
+                'Required', 'Permitted', 'Forbidden') in output
+            assert len(flat_rules) == rules_number
