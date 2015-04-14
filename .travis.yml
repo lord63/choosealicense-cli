@@ -5,9 +5,13 @@ python:
     - "3.3"
     - "3.4"
 
-before_install:
+install:
     - pip install -r dev-requirements.txt
     - pip install -U .
+
+before_script:
+    - git config --global user.name 'Travis CI'
+    - git config --global user.email 'test@exmaple.com'
 
 script:
     - invoke test
