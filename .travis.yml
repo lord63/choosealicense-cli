@@ -1,0 +1,16 @@
+language: python
+
+python:
+    - "2.7"
+    - "3.3"
+    - "3.4"
+
+before_install:
+    - pip install -r dev-requirements.txt
+    - pip install -U .
+
+script:
+    - invoke test
+
+notifications:
+    email: false
