@@ -6,7 +6,7 @@ from invoke import task, run
 
 @task
 def test():
-    run("py.test choosealicense/test/")
+    run("py.test -v choosealicense/test/")
 
 
 @task
@@ -20,6 +20,6 @@ def clean():
 @task
 def publish(test=False):
     if test:
-        run("python setup.py register -r test sdist upload -r test")
+        run("python setup.py register -r testpypi sdist upload -r testpypi")
     else:
         run("python setup.py register -r sdist upload")
