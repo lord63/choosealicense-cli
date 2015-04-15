@@ -22,4 +22,4 @@ def publish(test=False):
     if test:
         run("python setup.py register -r testpypi sdist upload -r testpypi")
     else:
-        run("python setup.py register -r sdist upload")
+        run("python setup.py register -r pypi sdist upload")
