@@ -56,16 +56,14 @@ def get_default_context():
         fullname = subprocess.check_output(
             'git config --get user.name'.split()
         ).strip().decode('utf-8')
-    except Exception:
-        echo("WARNING: Please configure your git(user.name).\n")
-        raise
+    except subprocess.CalledProcessError:
+        raise click.ClickException("Please configure your git(user.name).")
     try:
         email = subprocess.check_output(
             'git config --get user.email'.split()
         ).strip().decode('utf-8')
-    except Exception:
-        echo("WARNING: Please configure your git(user.email).\n")
-        raise
+    except subprocess.CalledProcessError:
+        raise click.ClickException("Please configure your git(user.email).")
     return {'year': year, 'fullname': fullname, 'email': email,
             'project': 'the copyright holder'}
 
@@ -94,11 +92,15 @@ def info(license):
     response = requests.get(
         'https://api.github.com/licenses/{0}'.format(license),
         headers={'accept': 'application/vnd.github.drax-preview+json'})
-    print_name(response.json()['name'])
-    print_description(response.json()['description'])
-    print_rule_list(response.json()['required'],
-                    response.json()['permitted'],
-                    response.json()['forbidden'])
+    try:
+        print_name(response.json()['name'])
+        print_description(response.json()['description'])
+        print_rule_list(response.json()['required'],
+                        response.json()['permitted'],
+                        response.json()['forbidden'])
+    except KeyError:
+        raise click.ClickException("Invalid license name, use `license show` "
+                                   "to get the all available licenses.")
 
 
 @cli.command()
@@ -112,7 +114,13 @@ def generate(license, fullname, year, email, project):
     response = requests.get(
         'https://api.github.com/licenses/{0}'.format(license),
         headers={'accept': 'application/vnd.github.drax-preview+json'})
-    license_template = response.json()['body']
+
+    try:
+        license_template = response.json()['body']
+    except KeyError:
+        raise click.ClickException("Invalid license name, use `license show` "
+                                   "to get the all available licenses.")
+
     if license not in LICENSE_WITH_CONTEXT:
         echo(license_template, nl=False)
     else:

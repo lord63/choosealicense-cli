@@ -43,3 +43,10 @@ class TestInfo():
             assert '{0:<25}{1:<25}{2}'.format(
                 'Required', 'Permitted', 'Forbidden') in output
             assert len(flat_rules) == rules_number
+
+    def test_show_invalid_license_info(self, runner):
+        result = runner.invoke(info, ['invalid'])
+        output, exit_code = result.output, result.exit_code
+        assert exit_code != 0
+        assert output == ("Error: Invalid license name, use `license show` "
+                          "to get the all available licenses.\n")

@@ -42,3 +42,10 @@ class TestGenerate():
                     assert defaults['fullname'] in output
                     assert defaults['year'] in output
                     assert defaults['project'] in output
+
+    def test_generate_invalid_license(self, runner):
+        result = runner.invoke(generate, ['invalid'])
+        output, exit_code = result.output, result.exit_code
+        assert exit_code != 0
+        assert output == ("Error: Invalid license name, use `license show` "
+                          "to get the all available licenses.\n")
