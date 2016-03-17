@@ -14,7 +14,7 @@ before_script:
     - git config --global user.email 'test@exmaple.com'
 
 script:
-    - invoke test
+    - make test
 
 notifications:
     email: false
