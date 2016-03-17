@@ -7,7 +7,7 @@
 
 import pytest
 
-from choosealicense.main import show
+from choosealicense.cli import show
 
 
 @pytest.mark.usefixtures('mock_api')

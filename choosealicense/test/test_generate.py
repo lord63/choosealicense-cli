@@ -7,8 +7,8 @@
 
 import pytest
 
-from choosealicense.main import (generate, LICENSE_WITH_CONTEXT,
-                                 get_default_context)
+from choosealicense.cli import generate, LICENSE_WITH_CONTEXT
+from choosealicense.utils import get_default_context
 
 
 @pytest.mark.usefixtures('mock_api')

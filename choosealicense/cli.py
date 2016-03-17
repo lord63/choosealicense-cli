@@ -10,7 +10,7 @@ from click import echo
 
 from choosealicense import __version__
 from choosealicense.utils import get_default_context, send_request
-from choosealicense.cli import print_name, print_description, print_rule_list
+from choosealicense.ui import print_name, print_description, print_rule_list
 
 
 LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
