@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 import re
 
 import click
 from click import echo
 
 from choosealicense import __version__
-from choosealicense.utils import (print_name, print_description,
-                                  print_rule_list, get_default_context,
-                                  send_request)
+from choosealicense.utils import get_default_context, send_request
+from choosealicense.cli import print_name, print_description, print_rule_list
 
 
 LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
