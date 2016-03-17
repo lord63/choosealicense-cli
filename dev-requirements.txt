@@ -1,5 +1,5 @@
 click
 requests
-pytest
+pytest>=2.9.0
 pytest-flake8
 responses
