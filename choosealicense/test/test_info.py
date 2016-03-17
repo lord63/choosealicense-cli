@@ -39,6 +39,7 @@ class TestInfo():
             fullname, rules_number = fullname_and_rules_number
 
             assert exit_code == 0
+            assert '</a>' not in output
             assert fullname in output
             assert '{0:<25}{1:<25}{2}'.format(
                 'Required', 'Permitted', 'Forbidden') in output

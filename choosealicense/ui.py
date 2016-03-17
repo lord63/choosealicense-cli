@@ -3,6 +3,7 @@
 
 from __future__ import absolute_import
 
+import re
 import textwrap
 
 from click import echo, secho
@@ -18,6 +19,10 @@ def print_name(name):
 
 def print_description(text):
     """Print the short description for the license."""
+    # Strip the link tag, but this solution is not elegant enough.
+    for link in re.findall(r'<a href=[^<]*</a>', text):
+        text = text.replace(link,
+                            re.search(r'(?<=">).*(?=</a>)', link).group())
     width, _ = get_terminal_size()
     width = width if width < 78 else 78
     for line in textwrap.wrap(text, width):
