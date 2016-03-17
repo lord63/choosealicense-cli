@@ -5,11 +5,11 @@ import re
 
 import click
 from click import echo
-import requests
 
 from choosealicense import __version__
 from choosealicense.utils import (print_name, print_description,
-                                  print_rule_list, get_default_context)
+                                  print_rule_list, get_default_context,
+                                  send_request)
 
 
 LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
@@ -26,9 +26,7 @@ def cli():
 @cli.command()
 def show():
     """List all the license."""
-    response = requests.get(
-        'https://api.github.com/licenses',
-        headers={'accept': 'application/vnd.github.drax-preview+json'})
+    response = send_request('https://api.github.com/licenses')
     keys = [item['key'] for item in response.json()]
     echo(', '.join(keys))
 
@@ -37,9 +35,8 @@ def show():
 @click.argument('license')
 def info(license):
     """Show the info of the specified license."""
-    response = requests.get(
-        'https://api.github.com/licenses/{0}'.format(license),
-        headers={'accept': 'application/vnd.github.drax-preview+json'})
+    response = send_request(
+        'https://api.github.com/licenses/{0}'.format(license))
     try:
         print_name(response.json()['name'])
         print_description(response.json()['description'])
@@ -59,9 +56,8 @@ def info(license):
 @click.argument('license')
 def generate(license, fullname, year, email, project):
     """Generate the specified license."""
-    response = requests.get(
-        'https://api.github.com/licenses/{0}'.format(license),
-        headers={'accept': 'application/vnd.github.drax-preview+json'})
+    response = send_request(
+        'https://api.github.com/licenses/{0}'.format(license))
 
     try:
         license_template = response.json()['body']
@@ -93,9 +89,8 @@ def context(license):
     if license not in LICENSE_WITH_CONTEXT:
         echo("Just use it, there's no context for the license.")
     else:
-        response = requests.get(
-            'https://api.github.com/licenses/{0}'.format(license),
-            headers={'accept': 'application/vnd.github.drax-preview+json'})
+        response = send_request(
+            'https://api.github.com/licenses/{0}'.format(license))
         context = re.findall(r'\[(\w+)\]', response.json()['body'])
         default_context = get_default_context()
         echo('The template has following defaults:')

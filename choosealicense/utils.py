@@ -4,12 +4,19 @@
 from __future__ import absolute_import
 
 from datetime import date
+from functools import partial
 import subprocess
 import textwrap
 
 import click
 from click import echo, secho
 from click.termui import get_terminal_size
+import requests
+
+
+send_request = partial(
+    requests.get,
+    headers={'accept': 'application/vnd.github.drax-preview+json'})
 
 
 def print_name(name):
