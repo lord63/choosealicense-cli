@@ -65,17 +65,16 @@ def generate(license, fullname, year, email, project):
     if license not in LICENSE_WITH_CONTEXT:
         echo(license_template, nl=False)
     else:
-        context = re.findall(r'\[(\w+)\]', response.json()['body'])
+        context_variable = re.findall(r'\[(\w+)\]', response.json()['body'])
         raw_context = {'fullname': fullname, 'year': year, 'email': email,
                        'project': project}
         user_context = {key: value for (key, value) in raw_context.items()
                         if value is not None}
-        default_context = get_default_context()
-        for (key, value) in user_context.items():
-            default_context[key] = value
-        for item in context:
+        context = get_default_context()
+        context.update(user_context)
+        for item in context_variable:
             license_template = license_template.replace('[{0}]'.format(item),
-                                                        default_context[item])
+                                                        context[item])
         echo(license_template, nl=False)
 
 
