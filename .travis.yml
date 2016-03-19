@@ -8,6 +8,7 @@ python:
 
 install:
     - pip install -r dev-requirements.txt
+    - pip install codecov
     - pip install -U .
 
 before_script:
@@ -16,6 +17,9 @@ before_script:
 
 script:
     - make test
+
+after_success:
+  - codecov
 
 notifications:
     email: false
