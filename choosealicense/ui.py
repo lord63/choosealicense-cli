@@ -31,9 +31,10 @@ class InfoUI(object):
     def _print_description(self, text):
         """Print the short description for the license."""
         # Strip the link tag, but this solution is not elegant enough.
-        for link in re.findall(r'<a href=[^<]*</a>', text):
-            text = text.replace(link,
-                                re.search(r'(?<=">).*(?=</a>)', link).group())
+        tag_with_text_re = r'<a href=[^<]*</a>'
+        text_in_tag_re = r'(?<=">).*(?=</a>)'
+        for link in re.findall(tag_with_text_re, text):
+            text = text.replace(link, re.search(text_in_tag_re, link).group())
         width, _ = get_terminal_size()
         width = width if width < 78 else 78
         for line in textwrap.wrap(text, width):
