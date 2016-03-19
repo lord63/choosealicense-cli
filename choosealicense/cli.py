@@ -10,7 +10,7 @@ from click import echo
 
 from choosealicense import __version__
 from choosealicense.utils import get_default_context, send_request
-from choosealicense.ui import print_name, print_description, print_rule_list
+from choosealicense.ui import InfoUI
 
 
 LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
@@ -39,11 +39,7 @@ def info(license):
     response = send_request(
         'https://api.github.com/licenses/{0}'.format(license))
     try:
-        print_name(response.json()['name'])
-        print_description(response.json()['description'])
-        print_rule_list(response.json()['required'],
-                        response.json()['permitted'],
-                        response.json()['forbidden'])
+        InfoUI(response.json()).build_ui()
     except KeyError:
         raise click.ClickException("Invalid license name, use `license show` "
                                    "to get the all available licenses.")
