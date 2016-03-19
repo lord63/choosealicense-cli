@@ -49,3 +49,9 @@ class TestGenerate():
         assert exit_code != 0
         assert output == ("Error: Invalid license name, use `license show` "
                           "to get the all available licenses.\n")
+
+    def test_generate_license_with_argument(self, runner):
+        result = runner.invoke(generate, ['mit', '--year', '2000'])
+        output, exit_code = result.output, result.exit_code
+        assert exit_code == 0
+        assert '2000' in output

@@ -21,7 +21,7 @@ LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
 @click.version_option(__version__, '-V', '--version', message='%(version)s')
 def cli():
     """ChooseALicense in your terminal."""
-    pass
+    pass  # pragma: no cover
 
 
 @cli.command()
