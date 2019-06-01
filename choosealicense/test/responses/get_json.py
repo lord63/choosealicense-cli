@@ -13,21 +13,21 @@ def get_license_list():
         'https://api.github.com/licenses',
         headers={'accept': 'application/vnd.github.drax-preview+json'})
     with open(path.join(ROOT, 'licenses.json'), 'w') as f:
-        json.dump(response.json(), f)
+        json.dump(response.json(), f, indent=4)
     print("Get the license list.")
 
 
 def get_individual_license():
-    all_the_licenses = ('agpl-3.0, apache-2.0, artistic-2.0, bsd-2-clause, '
-                        'bsd-3-clause, cc0-1.0, epl-1.0, gpl-2.0, gpl-3.0, '
-                        'isc, lgpl-2.1, lgpl-3.0, mit, mpl-2.0, unlicense')
-    for license in all_the_licenses.split(', '):
+    with open(path.join(ROOT, 'licenses.json')) as f:
+        response = json.loads(f.read())
+    all_the_licenses = [l["key"] for l in response]
+    for license in all_the_licenses:
         response = requests.get(
             'https://api.github.com/licenses/{0}'.format(license),
             headers={'accept': 'application/vnd.github.drax-preview+json'})
         with open(path.join(ROOT, 'licenses/{0}.json'.format(license)),
                   'w') as f:
-            json.dump(response.json(), f)
+            json.dump(response.json(), f, indent=4)
         print("Get the license: {0}.".format(license))
 
 
@@ -36,11 +36,11 @@ def get_not_found():
         'https://api.github.com/licenses/invalid',
         headers={'accept': 'application/vnd.github.drax-preview+json'})
     with open(path.join(ROOT, 'not_found.json'), 'w') as f:
-        json.dump(response.json(), f)
+        json.dump(response.json(), f, indent=4)
     print("Get the invalid response.")
 
 
 if __name__ == "__main__":
-    get_license_list()
-    get_individual_license()
+    # get_license_list()
+    # get_individual_license()
     get_not_found()

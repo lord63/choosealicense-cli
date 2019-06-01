@@ -1,1 +1,4 @@
-{"documentation_url": "https://developer.github.com/v3", "message": "Not Found"}
+{
+    "message": "Not Found",
+    "documentation_url": "https://developer.github.com/v3/licenses/#get-an-individual-license"
+}
