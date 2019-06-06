@@ -1,6 +1,6 @@
 click
 requests
-pytest>=2.9.0
+pytest>=3.5
 pytest-cov
 pytest-flake8
 responses
