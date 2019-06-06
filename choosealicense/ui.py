@@ -42,14 +42,17 @@ class InfoUI(object):
 
     def _print_rule_list(self, permissions, conditions, limitations):
         """Print the rule list like the way on the web."""
-        max_rule_num = max(list(map(len, [permissions, conditions, limitations])))
+        max_rule_num = max(list(
+            map(len, [permissions, conditions, limitations])
+        ))
         for item in [permissions, conditions, limitations]:
             if len(item) < max_rule_num:
                 item.extend(' '*(max_rule_num-len(item)))
         secho('{:<25}'.format('Permissions'), nl=False, bold=True, fg='green')
         secho('{:<25}'.format('Conditions'), nl=False, bold=True, fg='blue')
         secho('Limitations', bold=True, fg='red')
-        for permision, condition, limitation in zip(permissions, conditions, limitations):
+        for permision, condition, limitation in zip(
+                permissions, conditions, limitations):
             secho('{:<25}'.format(permision), nl=False)
             secho('{:<25}'.format(condition), nl=False)
             secho(limitation)
