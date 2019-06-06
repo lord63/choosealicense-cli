@@ -18,14 +18,13 @@ class InfoUI(object):
         """Build the CLI UI for `license info`."""
         self._print_name(self.info['name'])
         self._print_description(self.info['description'])
-        self._print_rule_list(self.info['required'],
-                              self.info['permitted'],
-                              self.info['forbidden'])
+        self._print_rule_list(self.info['permissions'],
+                              self.info['conditions'],
+                              self.info['limitations'])
 
     def _print_name(self, name):
         """Print the license name in a nice way."""
         secho(name, bold=True)
-        secho('='*len(name), bold=True)
         echo()
 
     def _print_description(self, text):
@@ -41,16 +40,19 @@ class InfoUI(object):
             echo(line)
         echo()
 
-    def _print_rule_list(self, required, permitted, forbidden):
+    def _print_rule_list(self, permissions, conditions, limitations):
         """Print the rule list like the way on the web."""
-        max_rule_num = max(list(map(len, [required, permitted, forbidden])))
-        for item in [required, permitted, forbidden]:
+        max_rule_num = max(list(
+            map(len, [permissions, conditions, limitations])
+        ))
+        for item in [permissions, conditions, limitations]:
             if len(item) < max_rule_num:
                 item.extend(' '*(max_rule_num-len(item)))
-        secho('{:<25}'.format('Required'), nl=False, bold=True, fg='blue')
-        secho('{:<25}'.format('Permitted'), nl=False, bold=True, fg='green')
-        secho('Forbidden', bold=True, fg='red')
-        for require, permit, forbid in zip(required, permitted, forbidden):
-            secho('{:<25}'.format(require), nl=False)
-            secho('{:<25}'.format(permit), nl=False)
-            secho(forbid)
+        secho('{:<25}'.format('Permissions'), nl=False, bold=True, fg='green')
+        secho('{:<25}'.format('Conditions'), nl=False, bold=True, fg='blue')
+        secho('Limitations', bold=True, fg='red')
+        for permision, condition, limitation in zip(
+                permissions, conditions, limitations):
+            secho('{:<25}'.format(permision), nl=False)
+            secho('{:<25}'.format(condition), nl=False)
+            secho(limitation)
