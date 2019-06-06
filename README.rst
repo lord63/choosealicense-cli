@@ -12,9 +12,11 @@ your terminal.
 Install
 -------
 
+note: please update version to 1.0.0 and above, the github api has changed.
+
 ::
 
-    $ pip install choosealicense-cli
+    $ pip install -U choosealicense-cli
 
 Usage
 -----
