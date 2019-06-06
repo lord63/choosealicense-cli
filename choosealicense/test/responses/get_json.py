@@ -41,6 +41,6 @@ def get_not_found():
 
 
 if __name__ == "__main__":
-    # get_license_list()
-    # get_individual_license()
+    get_license_list()
+    get_individual_license()
     get_not_found()
