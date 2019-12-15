@@ -1,2 +1,7 @@
 include README.md
 include LICENSE
+include ChangeLog
+include *requirements*.txt
+include Makefile
+recursive-include choosealicense *.json
+recursive-include choosealicense *.py
