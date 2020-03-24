@@ -11,6 +11,21 @@ from choosealicense.cli import context, LICENSE_WITH_CONTEXT
 from choosealicense.utils import get_default_context
 
 
+context_template = u'''\
+The template has following defaults:
+\tyear: {0}
+\tfullname: {1}
+You can overwrite them at your ease.
+'''
+context_with_email_template = u'''\
+The template has following defaults:
+\tyear: {0}
+\tfullname: {1}
+\temail: {2}
+You can overwrite them at your ease.
+'''
+
+
 @pytest.mark.usefixtures('mock_api')
 class TestContext():
     def test_show_license_context(self, runner):
@@ -28,28 +43,11 @@ class TestContext():
             else:
                 defaults = get_default_context()
 
-                if license in ['mit', 'artistic-2.0', 'bsd-2-clause']:
-                    assert output == (
-                        "The template has following defaults:\n"
-                        "\tyear: {0}\n"
-                        "\tfullname: {1}\n"
-                        "You can overwrite them at your ease.\n").format(
-                            defaults['year'], defaults['fullname'])
+                if license in ['mit', 'artistic-2.0', 'bsd-2-clause', 'bsd-3-clause']:
+                    assert output == context_template.format(
+                        defaults['year'], defaults['fullname'])
 
                 if license == 'isc':
-                    assert output == (
-                        "The template has following defaults:\n"
-                        "\tyear: {0}\n"
-                        "\tfullname: {1}\n"
-                        "\temail: {2}\n"
-                        "You can overwrite them at your ease.\n").format(
+                    assert output == context_with_email_template.format(
                             defaults['year'], defaults['fullname'],
                             defaults['email'])
-
-                if license == 'bsd-3-clause':
-                    assert output == (
-                        "The template has following defaults:\n"
-                        "\tyear: {0}\n"
-                        "\tfullname: {1}\n"
-                        "You can overwrite them at your ease.\n").format(
-                            defaults['year'], defaults['fullname'])
