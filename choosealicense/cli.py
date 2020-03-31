@@ -9,7 +9,7 @@ import click
 from click import echo
 
 from choosealicense import __version__
-from choosealicense.utils import get_default_context, send_request
+from choosealicense.utils import get_default_context, get_api_response
 from choosealicense.ui import InfoUI
 
 
@@ -27,7 +27,7 @@ def cli():
 @cli.command()
 def show():
     """List all the license."""
-    response = send_request('https://api.github.com/licenses')
+    response = get_api_response('https://api.github.com/licenses')
     keys = [item['key'] for item in response.json()]
     echo(', '.join(keys))
 
@@ -36,7 +36,7 @@ def show():
 @click.argument('license')
 def info(license):
     """Show the info of the specified license."""
-    response = send_request(
+    response = get_api_response(
         'https://api.github.com/licenses/{0}'.format(license))
     try:
         InfoUI(response.json()).build_ui()
@@ -53,7 +53,7 @@ def info(license):
 @click.argument('license')
 def generate(license, fullname, year, email, project):
     """Generate the specified license."""
-    response = send_request(
+    response = get_api_response(
         'https://api.github.com/licenses/{0}'.format(license))
 
     try:
@@ -85,7 +85,7 @@ def context(license):
     if license not in LICENSE_WITH_CONTEXT:
         echo("Just use it, there's no context for the license.")
     else:
-        response = send_request(
+        response = get_api_response(
             'https://api.github.com/licenses/{0}'.format(license))
         context = re.findall(r'\[(\w+)\]', response.json()['body'])
         default_context = get_default_context()
