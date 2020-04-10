@@ -1,3 +1,7 @@
+## 2020.04.10 v1.1.0
+- fix error when git config has unicode, #6
+- add support github token via env var, #9
+
 ## 2019.06.06 v1.0.0 [BREAK CHANGE]
 - update to latest github api
 - drop python 3.3 support and add 3.6 support
