@@ -48,6 +48,36 @@ Generate a license:
 Get detailed help message via ``license -h`` and
 ``license show/info/context/generate -h``
 
+Developing
+----------
+
+First, prepare your development environment, it is
+recommended to use a virtual environment.
+
+Create the virtual environment:
+
+::
+
+    $ python -m venv venv
+
+Activate the virtual environment:
+
+::
+
+    $ source venv/bin/activate
+
+Install the development dependencies:
+
+::
+
+    $ pip install -r dev-requirements.txt
+
+Run the tests:
+
+::
+
+    $ pip install -e . && make test
+
 License
 -------
 
