@@ -17,6 +17,11 @@ LICENSE_WITH_CONTEXT = ['mit', 'artistic-2.0', 'bsd-2-clause',
                         'bsd-3-clause', 'isc']
 
 
+def to_lower(ctx, param, value):
+    """Callback to lower case the value of a click argument"""
+    return value.lower()
+
+
 @click.group(context_settings={'help_option_names': ('-h', '--help')})
 @click.version_option(__version__, '-V', '--version', message='%(version)s')
 def cli():
@@ -33,7 +38,7 @@ def show():
 
 
 @cli.command()
-@click.argument('license')
+@click.argument('license', callback=to_lower)
 def info(license):
     """Show the info of the specified license."""
     response = get_api_response(
@@ -50,7 +55,7 @@ def info(license):
 @click.option('--year', '-y', help="Copyright year")
 @click.option('--email', '-e', help="Copyright holder's email")
 @click.option('--project', '-p', help="The project organization")
-@click.argument('license')
+@click.argument('license', callback=to_lower)
 def generate(license, fullname, year, email, project):
     """Generate the specified license."""
     response = get_api_response(
@@ -79,7 +84,7 @@ def generate(license, fullname, year, email, project):
 
 
 @cli.command()
-@click.argument('license')
+@click.argument('license', callback=to_lower)
 def context(license):
     """Show the default context for the license."""
     if license not in LICENSE_WITH_CONTEXT:
