@@ -20,7 +20,7 @@ def get_license_list():
 def get_individual_license():
     with open(path.join(ROOT, 'licenses.json')) as f:
         response = json.loads(f.read())
-    all_the_licenses = [l["key"] for l in response]
+    all_the_licenses = [license["key"] for license in response]
     for license in all_the_licenses:
         response = requests.get(
             'https://api.github.com/licenses/{0}'.format(license),
