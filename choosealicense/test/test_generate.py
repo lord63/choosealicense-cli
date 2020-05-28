@@ -14,11 +14,15 @@ from choosealicense.utils import get_default_context
 @pytest.mark.usefixtures('mock_api')
 class TestGenerate():
     def test_generate_license(self, runner):
-        all_the_licenses = (
-            'agpl-3.0, apache-2.0, artistic-2.0, bsd-2-clause, '
-            'bsd-3-clause, cc0-1.0, epl-1.0, gpl-2.0, gpl-3.0, '
-            'isc, lgpl-2.1, lgpl-3.0, mit, mpl-2.0, unlicense')
-        for license in all_the_licenses.split(', '):
+        all_the_licenses = [
+            'agpl-3.0', 'apache-2.0', 'artistic-2.0', 'bsd-2-clause',
+            'bsd-3-clause', 'cc0-1.0', 'epl-1.0', 'gpl-2.0', 'gpl-3.0',
+            'isc', 'lgpl-2.1', 'lgpl-3.0', 'mit', 'mpl-2.0', 'unlicense'
+        ]
+
+        all_the_licences_upper_cased = [licence.upper() for licence in all_the_licenses]
+
+        for license in all_the_licenses + all_the_licences_upper_cased:
             result = runner.invoke(generate, [license])
             output, exit_code = result.output, result.exit_code
             assert exit_code == 0
@@ -29,16 +33,16 @@ class TestGenerate():
             else:
                 defaults = get_default_context()
 
-                if license in ['mit', 'artistic-2.0', 'bsd-2-clause']:
+                if license.lower() in ['mit', 'artistic-2.0', 'bsd-2-clause']:
                     assert defaults['fullname'] in output
                     assert defaults['year'] in output
 
-                if license == 'isc':
+                if license.lower() == 'isc':
                     assert defaults['fullname'] in output
                     assert defaults['year'] in output
                     assert defaults['email'] in output
 
-                if license == 'bsd-3-clause':
+                if license.lower() == 'bsd-3-clause':
                     assert defaults['fullname'] in output
                     assert defaults['year'] in output
                     assert defaults['project'] in output
